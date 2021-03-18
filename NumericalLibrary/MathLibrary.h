@@ -14,8 +14,8 @@ namespace MathLibrary
 
 		static bool unique(double X[], int length);
 
-		static double newton(double* tabX, double* tabY, int row, int i);
+		static double newtonDifferenceQuotient(double* tabX, double* tabY, int row, int i);
 
-		static double calculateNewton(double* tabX, double* tabY, int point, int num);
+		static double newton(double* tabX, double* tabY, int point, int num);
 	};
 }
