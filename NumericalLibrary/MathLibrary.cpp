@@ -22,7 +22,7 @@ namespace MathLibrary
 					tmp *= point - tabX[j];
 				}	
 			}
-			result += tmp * Numeric::newton(tabX, tabY, i, 0);
+			result += tmp * Numeric::newtonDifferenceQuotient(tabX, tabY, i, 0);
 		}
 		return result;
 	}
@@ -35,7 +35,7 @@ namespace MathLibrary
 		if (row == 1) {
 			return  (tabY[i + 1] - tabY[i]) / (tabX[i + 1] - tabX[i]);
 		}
-		return	(newton(tabX, tabY, row - 1, i + 1) - newton(tabX, tabY, row - 1, i)) / (tabX[i + row] - tabX[i]);
+		return	(newtonDifferenceQuotient(tabX, tabY, row - 1, i + 1) - newtonDifferenceQuotient(tabX, tabY, row - 1, i)) / (tabX[i + row] - tabX[i]);
 	}
 
 
