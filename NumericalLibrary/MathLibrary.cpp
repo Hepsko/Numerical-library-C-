@@ -7,19 +7,62 @@ namespace MathLibrary
 {
 
 
-	double Numeric::newton(double* tabX, double* tabY, int point, int num) {
-		float result = tabY[0];  
-		int tmp = 0;			
+
+	double Numeric::valueAtPoint(double fun[], double  point,  size_t size) {
+
+		double y = 0.;
+		for (unsigned int i = 0; i < size; i++) {
+			y += fun[i] * pow(point, size - 1 - i);
+		}
+		return y;
+	}
+
+	double Numeric::rectangleIntegration(double fun_form[], double  start, double end, int prec,  size_t size) {
+		double dx = (end - start) / prec;
+		double output = 0.;
+
+		for (unsigned int i = 0; i < prec; i++) {
+
+			start += dx;
+			output += valueAtPoint(fun_form, start,  size);
+
+		}
+
+		return dx * output;
+	}
+
+	double	Numeric::trapezeIntegration(double fun_form[], double start, double end, int prec,  size_t size){
+		double dx = (end - start) / prec;
+		double output = 0.;
+		
+		
+
+		for (unsigned int i = 0; i < prec; i++) {
+
+			double numerator;
+
+			numerator = valueAtPoint(fun_form, start, size);
+			start += dx;
+			numerator += valueAtPoint(fun_form, start, size);
+			output += numerator / 2;
+
+		}
+		return dx * output;
+}
+
+	double Numeric::newton(double* tabX, double* tabY, double newPoint, int num) {
+		double result = tabY[0];  
+		double tmp = 0;			
 		for (int i = 0; i < num; i++)
 		{
 			tmp = 0;				
 			for (int j = 0; j < i; j++) {	
 				if (j == 0){
-					tmp = point - tabX[0];
+					tmp = newPoint - tabX[0];
 				}
 				else
 				{
-					tmp *= point - tabX[j];
+					tmp *= newPoint - tabX[j];
 				}	
 			}
 			result += tmp * Numeric::newtonDifferenceQuotient(tabX, tabY, i, 0);
