@@ -16,6 +16,12 @@ namespace MathLibrary
 
 		static double newtonDifferenceQuotient(double* tabX, double* tabY, int row, int i);
 
-		static double newton(double* tabX, double* tabY, int point, int num);
+		static double newton(double* tabX, double* tabY, double newPoint, int num);
+
+		static double rectangleIntegration(double fun_form[], double start, double end, int prec,  size_t size);
+
+		static double trapezeIntegration(double fun_form[], double start, double end, int prec,  size_t size);
+
+		static double valueAtPoint(double fun[], double  point, size_t size);
 	};
 }
