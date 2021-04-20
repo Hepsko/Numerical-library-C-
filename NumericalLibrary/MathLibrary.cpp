@@ -3,10 +3,78 @@
 #include <fstream>
 #include <algorithm>
 #include <iostream>
+#include <time.h>
+
 namespace MathLibrary
 {
 
+	double* Numeric::gaussianElimination(double** equation, size_t size) {
+		
 
+		for (int c = 0; c < (size - 1); c++) {
+			for (int r = (c + 1); r < size; r++) {
+				double tmp = equation[r][c] / equation[c][c];
+
+				for (int k = 0; k < size; k++) {
+					equation[r][k] -= equation[c][k] * tmp;
+				}
+				equation[r][size] -= equation[c][size] * tmp;
+			}
+		}
+			
+			double* result = new double[size];
+			for (int i=(size - 1); i >= 0; i--) {
+				double counter = equation[i][size];
+				for (int j = (size - 1); j > i; j--) {
+					counter -= result[j] * equation[i][j];
+				}
+				result[i] = round(counter / equation[i][i] * 1000000) / 1000000;
+
+			}
+		return result;
+	}
+
+	double Numeric::monteCarloIntegration(double fun_form[], double start, double end, unsigned int prec, size_t size) {
+
+		srand(static_cast<unsigned int>(time(NULL)));
+		double average = 0.;
+
+		for (unsigned int i = 0; i < prec; i++) {
+
+			double f = static_cast<double>(rand()) / RAND_MAX;
+			double x = start + f * (end - start);
+
+			average += valueAtPoint(fun_form, x ,size);
+
+		}
+
+		average /= prec;
+		return average * abs(end - start);
+	}
+
+
+	double Numeric::simpsonIntegration(double fun_form[], double  start, double end, unsigned int steps, size_t size) {
+		
+		if (steps % 2 != 0) { steps--; }
+		double dx = (end - start) / steps;
+		double tmp = start;
+		double output=0;
+	
+		for (unsigned int i =0; i < steps; i+=2) {
+		
+			 tmp -= dx;
+			 double firstPoint = tmp += dx;
+			 double middlePoint = tmp += dx;
+			 double endPoint = tmp += dx;
+			
+			double temp = valueAtPoint(fun_form, firstPoint, size) + 4 * (valueAtPoint(fun_form, middlePoint, size)) + valueAtPoint(fun_form, endPoint, size);
+			temp *= (dx / 3);
+			
+			output += temp;
+		}
+
+		return output;
+	}
 
 	double Numeric::valueAtPoint(double fun[], double  point,  size_t size) {
 
@@ -17,7 +85,7 @@ namespace MathLibrary
 		return y;
 	}
 
-	double Numeric::rectangleIntegration(double fun_form[], double  start, double end, int prec,  size_t size) {
+	double Numeric::rectangleIntegration(double fun_form[], double  start, double end, unsigned int prec,  size_t size) {
 		double dx = (end - start) / prec;
 		double output = 0.;
 
@@ -31,7 +99,7 @@ namespace MathLibrary
 		return dx * output;
 	}
 
-	double	Numeric::trapezeIntegration(double fun_form[], double start, double end, int prec,  size_t size){
+	double	Numeric::trapezeIntegration(double fun_form[], double start, double end, unsigned int prec,  size_t size){
 		double dx = (end - start) / prec;
 		double output = 0.;
 		
@@ -109,6 +177,54 @@ namespace MathLibrary
 			}
 		}
 		return true;
+	}
+
+	double** Numeric::readTheEquation(std::string filename) {
+
+		/*
+		File pattern:
+		X  Y  Z  L
+		X  Y  Z  L
+		X  Y  Z  L
+	*/
+
+		int size = 0;
+		std::string line;
+
+		std::fstream handle(filename, std::ios::in);
+		if (handle.good() == true) {
+			while (getline(handle, line)) { size++; }
+			if (size == 0) {
+				handle.close();
+				throw "Error -> Not enough data";
+			}
+			handle.clear();
+			handle.seekg(0);
+
+			double** equation = new double *[size];
+			for (int i = 0; i < size; i++)
+			{
+				equation[i] = new double[size + 1];
+			}
+
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = 0; j < size +1; j++)
+				{
+					handle >> equation[i][j];
+				}
+			}
+
+			handle.close();
+	
+
+			return equation;
+		}
+		else {
+			handle.close();
+			throw "Error -> problem with opening data";
+		}
+
 	}
 
 	double Numeric::readDataAndClculateLagrange(std::string filename, double point) {
