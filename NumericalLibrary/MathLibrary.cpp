@@ -8,6 +8,56 @@
 namespace MathLibrary
 {
 
+	double  Numeric::ZeroOfAFunctionNewtonRaphson(double fun_form[], double derrivative_form[], double a, double b, double prec, size_t fun_size, size_t derrivative_size) {
+		double mid = (a + b) / 2;
+
+		if (valueAtPoint(fun_form, a, fun_size) * valueAtPoint(fun_form, b, fun_size) >= 0) {
+			//No solution between points
+			return INFINITY;
+		}
+
+
+		if (valueAtPoint(fun_form, mid, fun_size)==0) {
+			return mid;
+		}
+
+		double xn = a;
+
+		while (abs(valueAtPoint(fun_form, xn, fun_size)) >= prec) {
+			xn = xn - (valueAtPoint(fun_form, xn, fun_size)) / valueAtPoint(derrivative_form, xn, derrivative_size);
+		}
+
+		return xn;
+	}
+
+	double Numeric::ZeroOfAFunctionBisection(double fun_form[], double a, double b, double prec, size_t size) {
+		double mid = (a + b)/2;
+	
+		if (valueAtPoint(fun_form, a,size) * valueAtPoint(fun_form, b,size) >= 0) {
+			//No solution between points
+			return INFINITY;
+		}
+
+		if (valueAtPoint(fun_form, mid, size)==0) {
+		
+			return mid;
+		}
+		while (abs(a - b) >= prec) {
+			if (valueAtPoint(fun_form, mid, size) * valueAtPoint(fun_form, a, size) < 0) {
+				b = mid;
+			}
+
+			if (valueAtPoint(fun_form, mid, size) * valueAtPoint(fun_form, b, size) < 0) {
+				a = mid;
+			}
+			mid = (a + b) / 2;
+		}
+
+		return mid;
+		
+	}
+
+
 	double* Numeric::gaussianElimination(double** equation, size_t size) {
 		
 
@@ -33,6 +83,7 @@ namespace MathLibrary
 			}
 		return result;
 	}
+
 
 	double Numeric::monteCarloIntegration(double fun_form[], double start, double end, unsigned int prec, size_t size) {
 
@@ -118,7 +169,7 @@ namespace MathLibrary
 		return dx * output;
 }
 
-	double Numeric::newton(double* tabX, double* tabY, double newPoint, int num) {
+	double Numeric::newton(double* tabX, double* tabY, double new_point, int num) {
 		double result = tabY[0];  
 		double tmp = 0;			
 		for (int i = 0; i < num; i++)
@@ -126,11 +177,11 @@ namespace MathLibrary
 			tmp = 0;				
 			for (int j = 0; j < i; j++) {	
 				if (j == 0){
-					tmp = newPoint - tabX[0];
+					tmp = new_point - tabX[0];
 				}
 				else
 				{
-					tmp *= newPoint - tabX[j];
+					tmp *= new_point - tabX[j];
 				}	
 			}
 			result += tmp * Numeric::newtonDifferenceQuotient(tabX, tabY, i, 0);

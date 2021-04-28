@@ -6,6 +6,9 @@ namespace MathLibrary
 	class Numeric
 	{
 	public:
+		static double ZeroOfAFunctionNewtonRaphson(double fun_form[], double derrivative_form[], double a, double b, double prec, size_t fun_size, size_t derrivative_size);
+
+		static double ZeroOfAFunctionBisection(double fun_form[],  double a, double b, double prec, size_t size);
 		
 		static double lagrange(double* X, double* Y, int n, double x);
 
@@ -13,7 +16,7 @@ namespace MathLibrary
 
 		static double newtonDifferenceQuotient(double* tabX, double* tabY, int row, int i);
 
-		static double newton(double* tabX, double* tabY, double newPoint, int num);
+		static double newton(double* tabX, double* tabY, double new_point, int num);
 
 		static double rectangleIntegration(double fun_form[], double start, double end, unsigned int prec,  size_t size);
 
